@@ -4,13 +4,7 @@ import eslint from "vite-plugin-eslint";
 import path from "path";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    eslint({
-      lintOnStart: true,
-      cache: false
-    })
-  ],
+  plugins: [react(), eslint()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
