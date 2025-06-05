@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { m } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import { FiLoader } from "react-icons/fi";
 
 import { Poster, Loader, Error, Section } from "@/common";
 import { Casts, Videos, Genre } from "./components";
@@ -18,6 +19,7 @@ const Detail = () => {
   const [show, setShow] = useState<Boolean>(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isCheckingSaved, setIsCheckingSaved] = useState(true);
+  const [saveError, setSaveError] = useState("");
   const { fadeDown, staggerContainer } = useMotion();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -50,6 +52,8 @@ const Detail = () => {
         const saved = await isMovieSaved(user.id, movie.id.toString());
         setIsSaved(saved);
         setIsCheckingSaved(false);
+      } else {
+        setIsCheckingSaved(false);
       }
     };
 
@@ -66,15 +70,25 @@ const Detail = () => {
 
     if (!movie) return;
 
+    setSaveError("");
     setIsCheckingSaved(true);
-    const success = isSaved
-      ? await removeMovie(user.id, movie.id.toString())
-      : await saveMovie(user.id, movie, String(category));
+    
+    try {
+      const success = isSaved
+        ? await removeMovie(user.id, movie.id.toString())
+        : await saveMovie(user.id, movie, String(category));
 
-    if (success) {
-      setIsSaved(!isSaved);
+      if (success) {
+        setIsSaved(!isSaved);
+      } else {
+        setSaveError(isSaved ? "Failed to remove from saved" : "Failed to save");
+      }
+    } catch (error) {
+      console.error("Save/unsave error:", error);
+      setSaveError("An error occurred");
+    } finally {
+      setIsCheckingSaved(false);
     }
-    setIsCheckingSaved(false);
   };
 
   if (isLoading || isFetching) {
@@ -124,17 +138,30 @@ const Detail = () => {
               >
                 {title || name} {year && <span className="text-gray-400">({year})</span>}
               </m.h2>
-              <button
-                onClick={handleSaveToggle}
-                disabled={isCheckingSaved}
-                className="p-2 rounded-full hover:bg-gray-800 transition-colors"
-              >
-                {isSaved ? (
-                  <BsBookmarkFill className="w-6 h-6 text-red-500" />
-                ) : (
-                  <BsBookmark className="w-6 h-6 text-gray-300" />
+              <div className="relative group">
+                <button
+                  onClick={handleSaveToggle}
+                  disabled={isCheckingSaved}
+                  className="p-2 rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50"
+                  title={isSaved ? "Remove from saved" : "Save for later"}
+                >
+                  {isCheckingSaved ? (
+                    <FiLoader className="w-6 h-6 animate-spin text-gray-300" />
+                  ) : isSaved ? (
+                    <BsBookmarkFill className="w-6 h-6 text-red-500" />
+                  ) : (
+                    <BsBookmark className="w-6 h-6 text-gray-300" />
+                  )}
+                </button>
+                {saveError && (
+                  <div className="absolute top-full right-0 mt-2 bg-red-500 text-white text-sm px-2 py-1 rounded">
+                    {saveError}
+                  </div>
                 )}
-              </button>
+                <div className="absolute hidden group-hover:block top-full right-0 mt-2 bg-gray-800 text-white text-sm px-2 py-1 rounded whitespace-nowrap">
+                  {isSaved ? "Remove from saved" : "Save for later"}
+                </div>
+              </div>
             </div>
 
             <m.ul
