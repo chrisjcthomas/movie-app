@@ -114,7 +114,7 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
       </div>
 
       {isOpen && query.length >= 2 && (
-        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-h-[480px] overflow-auto">
+        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
           {isFetching ? (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
               Searching...
@@ -126,38 +126,21 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
                   key={item.id}
                   onClick={() => handleSuggestionClick(item.id)}
                   className={cn(
-                    "p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 flex gap-4",
+                    "p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3",
                     index === selectedIndex && "bg-gray-100 dark:bg-gray-700"
                   )}
                 >
-                  {/* Poster/Thumbnail Column */}
-                  <div className="flex-shrink-0">
-                    <img
-                      src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
-                      alt={item.title || item.name}
-                      className="w-16 h-24 object-cover rounded-md"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/92x138?text=No+Image';
-                      }}
-                    />
-                  </div>
-
-                  {/* Content Column */}
-                  <div className="flex-grow">
-                    <div className="font-medium text-base mb-1">
-                      {highlightMatch(item.title || item.name)}
-                      {item.release_date && (
-                        <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
-                          ({new Date(item.release_date).getFullYear()})
-                        </span>
-                      )}
-                    </div>
-                    {item.overview && (
-                      <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                        {highlightMatch(item.overview)}
-                      </div>
-                    )}
-                  </div>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
+                    alt={item.title || item.name}
+                    className="w-10 h-15 object-cover rounded"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/92x138?text=No+Image';
+                    }}
+                  />
+                  <span className="font-medium">
+                    {highlightMatch(item.title || item.name)}
+                  </span>
                 </li>
               ))}
             </ul>
