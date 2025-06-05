@@ -107,7 +107,7 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
           onChange={handleQueryChange}
           onKeyDown={handleKeyDown}
           onFocus={() => query.length >= 2 && setIsOpen(true)}
-          placeholder="Search movies and TV shows..."
+          placeholder="Search movies and series..."
           className="w-full py-2 px-4 pr-10 rounded-full bg-gray-100 dark:bg-gray-800 focus:outline-none"
         />
         <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
