@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     eslint({
-      overrideConfigFile: '.eslintrc.json'
+      overrideConfigFile: '.eslintrc.cjs'
     })
   ],
   resolve: {
