@@ -3,10 +3,10 @@ import { useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { BsMoonStarsFill, BsBookmark } from "react-icons/bs";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FiSun, FiSearch, FiSettings } from "react-icons/fi";
+import { FiSun, FiSettings } from "react-icons/fi";
 import throttle from "lodash.throttle";
 
-import { ThemeMenu, Logo } from "..";
+import { ThemeMenu, Logo, SearchBar } from "..";
 import HeaderNavItem from "./HeaderNavItem";
 
 import { useGlobalContext } from "@/context/globalContext";
@@ -19,7 +19,6 @@ import { cn } from "@/utils/helper";
 const Header = () => {
   const { openMenu, theme, showThemeOptions } = useTheme();
   const { setShowSidebar } = useGlobalContext();
-  const [searchQuery, setSearchQuery] = useState("");
 
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isNotFoundPage, setIsNotFoundPage] = useState<boolean>(false);
@@ -59,12 +58,6 @@ const Header = () => {
     }
   }, [location.pathname]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Implement search functionality
-    console.log("Search:", searchQuery);
-  };
-
   return (
     <header
       className={cn(
@@ -96,26 +89,9 @@ const Header = () => {
           </ul>
         </div>
 
-        <form
-          onSubmit={handleSearch}
-          className="hidden md:flex items-center max-w-md w-full mx-4"
-        >
-          <div className="relative w-full">
-            <input
-              type="text"
-              placeholder="Search movies and TV shows..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full py-2 px-4 pr-10 rounded-full bg-gray-100 dark:bg-gray-800 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2"
-            >
-              <FiSearch className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-            </button>
-          </div>
-        </form>
+        <div className="hidden md:flex items-center max-w-md w-full mx-4">
+          <SearchBar />
+        </div>
 
         <div className="hidden md:flex items-center gap-4">
           <button
