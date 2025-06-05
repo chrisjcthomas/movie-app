@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { BsMoonStarsFill, BsBookmark } from "react-icons/bs";
@@ -24,20 +24,20 @@ const Header = () => {
   const [isNotFoundPage, setIsNotFoundPage] = useState<boolean>(false);
   const location = useLocation();
 
-  const handleBackgroundChange = useCallback(() => {
-    const body = document.body;
-    if (
-      window.scrollY > 0 ||
-      (body.classList.contains("no-scroll") &&
-        parseFloat(body.style.top) * -1 > 0)
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
-  }, []);
-
   useEffect(() => {
+    const handleBackgroundChange = () => {
+      const body = document.body;
+      if (
+        window.scrollY > 0 ||
+        (body.classList.contains("no-scroll") &&
+          parseFloat(body.style.top) * -1 > 0)
+      ) {
+        setIsActive(true);
+      } else {
+        setIsActive(false);
+      }
+    };
+
     const throttledHandleBackgroundChange = throttle(
       handleBackgroundChange,
       THROTTLE_DELAY
@@ -46,10 +46,9 @@ const Header = () => {
     window.addEventListener("scroll", throttledHandleBackgroundChange);
 
     return () => {
-      throttledHandleBackgroundChange.cancel();
       window.removeEventListener("scroll", throttledHandleBackgroundChange);
     };
-  }, [handleBackgroundChange]);
+  }, []);
 
   useEffect(() => {
     if (location.pathname.split("/").length > 3) {
