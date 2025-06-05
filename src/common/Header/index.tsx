@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { BsMoonStarsFill } from "react-icons/bs";
+import { BsMoonStarsFill, BsBookmark } from "react-icons/bs";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FiSun, FiSearch, FiSave, FiSettings } from "react-icons/fi";
+import { FiSun, FiSearch, FiSettings } from "react-icons/fi";
 import throttle from "lodash.throttle";
 
 import { ThemeMenu, Logo } from "..";
@@ -127,7 +127,7 @@ const Header = () => {
                 : "text-gray-300 hover:text-secColor"
             )}
           >
-            <FiSave className="w-5 h-5" />
+            <BsBookmark className="w-5 h-5" />
           </button>
           <button
             type="button"
@@ -177,4 +177,4 @@ const Header = () => {
   );
 };
 
-export default Header
+export default Header;
