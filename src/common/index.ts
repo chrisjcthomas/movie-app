@@ -11,8 +11,6 @@ import Error from "./Error";
 import ThemeMenu from "./ThemeMenu";
 import Section from "./Section";
 import SearchBar from "./SearchBar";
-import MovieSearchBar from "./SearchBar/MovieSearchBar";
-import SeriesSearchBar from "./SearchBar/SeriesSearchBar";
 
 export {
   Footer,
@@ -29,6 +27,4 @@ export {
   ThemeMenu,
   Section,
   SearchBar,
-  MovieSearchBar,
-  SeriesSearchBar,
 };
