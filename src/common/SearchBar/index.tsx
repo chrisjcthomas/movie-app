@@ -122,6 +122,11 @@ const SearchBar = ({ className }: SearchBarProps) => {
     );
   };
 
+  const getYear = (item: IMovie) => {
+    const date = item.release_date || item.first_air_date;
+    return date ? new Date(date).getFullYear() : null;
+  };
+
   const isLoading = isMoviesFetching || isTvFetching;
 
   return (
@@ -164,9 +169,16 @@ const SearchBar = ({ className }: SearchBarProps) => {
                       (e.target as HTMLImageElement).src = 'https://via.placeholder.com/92x138?text=No+Image';
                     }}
                   />
-                  <span className="font-medium">
-                    {highlightMatch(item.title || item.name)}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="font-medium">
+                      {highlightMatch(item.title || item.name)}
+                    </span>
+                    {getYear(item) && (
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        ({getYear(item)})
+                      </span>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
