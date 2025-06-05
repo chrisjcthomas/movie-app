@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper";
+import { Autoplay } from "swiper/modules";
 import { useEffect, useRef } from "react";
 
 import HeroSlide from "./HeroSlide";
