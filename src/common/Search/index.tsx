@@ -11,7 +11,15 @@ interface SearchResult {
   title?: string;
   name?: string;
   media_type: string;
-  poster_path: string;
+  poster_path: string | null;
+}
+
+interface RawTmdbSearchItem {
+  id: number;
+  title?: string;
+  name?: string;
+  popularity: number;
+  poster_path: string | null;
 }
 
 const Search = () => {
@@ -56,11 +64,14 @@ const Search = () => {
       ]);
 
       const combinedResults = [
-        ...moviesData.results.map((item: any) => ({
+        ...moviesData.results.map((item: RawTmdbSearchItem) => ({
           ...item,
           media_type: "movie",
         })),
-        ...tvData.results.map((item: any) => ({ ...item, media_type: "tv" })),
+        ...tvData.results.map((item: RawTmdbSearchItem) => ({ 
+          ...item, 
+          media_type: "tv" 
+        })),
       ]
         .sort((a, b) => b.popularity - a.popularity)
         .slice(0, 8);
@@ -126,4 +137,4 @@ const Search = () => {
   );
 };
 
-export default Search
+export default Search;

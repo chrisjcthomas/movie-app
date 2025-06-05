@@ -5,7 +5,7 @@ interface SearchResult {
   title?: string;
   name?: string;
   media_type: string;
-  poster_path: string;
+  poster_path: string | null;
 }
 
 interface SearchResultsProps {
