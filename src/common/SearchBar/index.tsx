@@ -4,23 +4,24 @@ import { useDebounce } from "usehooks-ts";
 import { useNavigate } from "react-router-dom";
 import { useGetShowsQuery } from "@/services/TMDB";
 import { cn } from "@/utils/helper";
+import { IMovie } from "@/types";
 
 interface SearchBarProps {
   className?: string;
-  category?: string;
 }
 
-const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
+const SearchBar = ({ className }: SearchBarProps) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [combinedResults, setCombinedResults] = useState<IMovie[]>([]);
   const debouncedQuery = useDebounce(query, 300);
   const navigate = useNavigate();
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const { data, isFetching } = useGetShowsQuery(
+  const { data: movieData, isFetching: isMoviesFetching } = useGetShowsQuery(
     {
-      category,
+      category: "movie",
       searchQuery: debouncedQuery,
       page: 1,
     },
@@ -29,7 +30,30 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
     }
   );
 
-  const suggestions = data?.results?.slice(0, 5) || [];
+  const { data: tvData, isFetching: isTvFetching } = useGetShowsQuery(
+    {
+      category: "tv",
+      searchQuery: debouncedQuery,
+      page: 1,
+    },
+    {
+      skip: debouncedQuery.length < 2,
+    }
+  );
+
+  useEffect(() => {
+    if (movieData?.results && tvData?.results) {
+      const movies = movieData.results.map(movie => ({ ...movie, mediaType: 'movie' }));
+      const tvShows = tvData.results.map(show => ({ ...show, mediaType: 'tv' }));
+      
+      // Combine and sort by popularity (assuming both have similar popularity metrics)
+      const combined = [...movies, ...tvShows]
+        .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
+        .slice(0, 5);
+      
+      setCombinedResults(combined);
+    }
+  }, [movieData, tvData]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -49,7 +73,7 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
       case "ArrowDown":
         e.preventDefault();
         setSelectedIndex((prev) =>
-          prev < suggestions.length - 1 ? prev + 1 : prev
+          prev < combinedResults.length - 1 ? prev + 1 : prev
         );
         break;
       case "ArrowUp":
@@ -59,8 +83,8 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
       case "Enter":
         e.preventDefault();
         if (selectedIndex >= 0) {
-          const selected = suggestions[selectedIndex];
-          navigate(`/${category}/${selected.id}`);
+          const selected = combinedResults[selectedIndex];
+          navigate(`/${selected.mediaType}/${selected.id}`);
           setIsOpen(false);
           setQuery("");
         }
@@ -78,8 +102,8 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
     setIsOpen(value.length >= 2);
   };
 
-  const handleSuggestionClick = (id: string) => {
-    navigate(`/${category}/${id}`);
+  const handleSuggestionClick = (id: string, mediaType: string) => {
+    navigate(`/${mediaType}/${id}`);
     setIsOpen(false);
     setQuery("");
   };
@@ -98,6 +122,8 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
     );
   };
 
+  const isLoading = isMoviesFetching || isTvFetching;
+
   return (
     <div ref={searchRef} className={cn("relative w-full", className)}>
       <div className="relative">
@@ -115,16 +141,16 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
 
       {isOpen && query.length >= 2 && (
         <div className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-          {isFetching ? (
+          {isLoading ? (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
               Searching...
             </div>
-          ) : suggestions.length > 0 ? (
+          ) : combinedResults.length > 0 ? (
             <ul>
-              {suggestions.map((item, index) => (
+              {combinedResults.map((item, index) => (
                 <li
                   key={item.id}
-                  onClick={() => handleSuggestionClick(item.id)}
+                  onClick={() => handleSuggestionClick(item.id, item.mediaType)}
                   className={cn(
                     "p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3",
                     index === selectedIndex && "bg-gray-100 dark:bg-gray-700"

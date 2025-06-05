@@ -16,4 +16,6 @@ export interface IMovie {
   backdrop_path: string;
   release_date?: string;
   first_air_date?: string;
+  mediaType?: 'movie' | 'tv';
+  popularity?: number;
 }
