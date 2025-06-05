@@ -113,8 +113,8 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
         <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
       </div>
 
-      {isOpen && (query.length >= 2) && (
-        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-h-96 overflow-auto">
+      {isOpen && query.length >= 2 && (
+        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-h-[480px] overflow-auto">
           {isFetching ? (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
               Searching...
@@ -126,18 +126,38 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
                   key={item.id}
                   onClick={() => handleSuggestionClick(item.id)}
                   className={cn(
-                    "px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700",
+                    "p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 flex gap-4",
                     index === selectedIndex && "bg-gray-100 dark:bg-gray-700"
                   )}
                 >
-                  <div className="font-medium">
-                    {highlightMatch(item.title || item.name)}
+                  {/* Poster/Thumbnail Column */}
+                  <div className="flex-shrink-0">
+                    <img
+                      src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
+                      alt={item.title || item.name}
+                      className="w-16 h-24 object-cover rounded-md"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/92x138?text=No+Image';
+                      }}
+                    />
                   </div>
-                  {item.overview && (
-                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                      {highlightMatch(item.overview)}
+
+                  {/* Content Column */}
+                  <div className="flex-grow">
+                    <div className="font-medium text-base mb-1">
+                      {highlightMatch(item.title || item.name)}
+                      {item.release_date && (
+                        <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                          ({new Date(item.release_date).getFullYear()})
+                        </span>
+                      )}
                     </div>
-                  )}
+                    {item.overview && (
+                      <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                        {highlightMatch(item.overview)}
+                      </div>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
