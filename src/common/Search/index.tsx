@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { debounce } from "lodash";
@@ -85,11 +85,17 @@ const Search = () => {
     }
   };
 
-  const debouncedSearch = debounce(searchMovies, 300);
+  const debouncedSearch = useCallback(
+    debounce(searchMovies, 300),
+    []
+  );
 
   useEffect(() => {
     debouncedSearch(query);
-  }, [query]);
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [query, debouncedSearch]);
 
   const handleResultClick = (result: SearchResult) => {
     navigate(`/${result.media_type}/${result.id}`);
@@ -136,5 +142,3 @@ const Search = () => {
     </div>
   );
 };
-
-export default Search;

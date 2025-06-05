@@ -3,8 +3,8 @@ import { API_KEY, TMDB_API_BASE_URL } from "@/utils/config";
 
 const context = React.createContext({
   videoId: "",
-  setVideoId: (prevValue: string) => { },
-  getTrailerId: (id: number | string) => { },
+  setVideoId: (prevValue: string) => { void 0; },
+  getTrailerId: (id: number | string) => { void 0; },
   closeModal: () => { },
   isModalOpen: false,
   showSidebar: false,
