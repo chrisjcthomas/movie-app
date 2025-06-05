@@ -25,6 +25,9 @@ const Home = lazy(() => import("./pages/Home"));
 const Detail = lazy(() => import("./pages/Detail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Calendar = lazy(() => import("./pages/Calendar"));
+const SignIn = lazy(() => import("./pages/Auth/SignIn"));
+const SignUp = lazy(() => import("./pages/Auth/SignUp"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 const App = () => {
   useEffect(() => {
@@ -46,6 +49,9 @@ const App = () => {
               <Route path="/:category/:id" element={<Detail />} />
               <Route path="/:category" element={<Catalog />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
