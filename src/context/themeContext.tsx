@@ -2,12 +2,16 @@ import React, { useContext, useState, useEffect, useCallback } from "react";
 import { saveTheme, getTheme } from "@/utils/helper";
 
 const context = React.createContext({
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setShowThemeOptions: (prev: boolean) => {},
   showThemeOptions: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   openMenu: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   closeMenu: () => {},
-
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setTheme: (newTheme: string) => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   checkSystemTheme: () => {},
   theme: "",
 });
