@@ -2,12 +2,19 @@ import React, { useContext, useState, useEffect, useCallback } from "react";
 import { saveTheme, getTheme } from "@/utils/helper";
 
 const context = React.createContext({
-  setShowThemeOptions: (prev: boolean) => {},
+  setShowThemeOptions: (_prev: boolean) => {
+    // This empty function will be replaced by the actual implementation
+  },
   showThemeOptions: false,
-  openMenu: () => {},
-  closeMenu: () => {},
-
-  setTheme: (newTheme: string) => {},
+  openMenu: () => {
+    // This empty function will be replaced by the actual implementation
+  },
+  closeMenu: () => {
+    // This empty function will be replaced by the actual implementation
+  },
+  setTheme: (_newTheme: string) => {
+    // This empty function will be replaced by the actual implementation
+  },
   checkSystemTheme: () => {},
   theme: "",
 });
