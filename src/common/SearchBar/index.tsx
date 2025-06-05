@@ -84,20 +84,6 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
     setQuery("");
   };
 
-  const highlightMatch = (text: string) => {
-    if (!query) return text;
-    const regex = new RegExp(`(${query})`, "gi");
-    return text.split(regex).map((part, i) =>
-      regex.test(part) ? (
-        <span key={i} className="bg-yellow-200 dark:bg-yellow-900">
-          {part}
-        </span>
-      ) : (
-        part
-      )
-    );
-  };
-
   return (
     <div ref={searchRef} className={cn("relative w-full", className)}>
       <div className="relative">
@@ -107,8 +93,9 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
           onChange={handleQueryChange}
           onKeyDown={handleKeyDown}
           onFocus={() => query.length >= 2 && setIsOpen(true)}
-          placeholder="Search movies and series..."
-          className="w-full py-2 px-4 pr-10 rounded-full bg-gray-100 dark:bg-gray-800 focus:outline-none"
+          placeholder={`Search ${category === "movie" ? "movies" : "series"}...`}
+          className="w-full py-2 px-4 pr-10 rounded-full bg-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+          aria-label={`Search ${category === "movie" ? "movies" : "series"}`}
         />
         <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
       </div>
@@ -126,38 +113,26 @@ const SearchBar = ({ className, category = "movie" }: SearchBarProps) => {
                   key={item.id}
                   onClick={() => handleSuggestionClick(item.id)}
                   className={cn(
-                    "p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 flex gap-4",
+                    "p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-4",
                     index === selectedIndex && "bg-gray-100 dark:bg-gray-700"
                   )}
                 >
-                  {/* Poster/Thumbnail Column */}
-                  <div className="flex-shrink-0">
-                    <img
-                      src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
-                      alt={item.title || item.name}
-                      className="w-16 h-24 object-cover rounded-md"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/92x138?text=No+Image';
-                      }}
-                    />
-                  </div>
-
-                  {/* Content Column */}
-                  <div className="flex-grow">
-                    <div className="font-medium text-base mb-1">
-                      {highlightMatch(item.title || item.name)}
-                      {item.release_date && (
-                        <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
-                          ({new Date(item.release_date).getFullYear()})
-                        </span>
-                      )}
-                    </div>
-                    {item.overview && (
-                      <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                        {highlightMatch(item.overview)}
-                      </div>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
+                    alt={item.title || item.name}
+                    className="w-12 h-16 object-cover rounded"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/92x138?text=No+Image';
+                    }}
+                  />
+                  <span className="flex-1 truncate">
+                    {item.title || item.name}
+                    {item.release_date && (
+                      <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                        ({new Date(item.release_date).getFullYear()})
+                      </span>
                     )}
-                  </div>
+                  </span>
                 </li>
               ))}
             </ul>
