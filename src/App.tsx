@@ -24,6 +24,7 @@ const Catalog = lazy(() => import("./pages/Catalog"));
 const Home = lazy(() => import("./pages/Home"));
 const Detail = lazy(() => import("./pages/Detail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Calendar = lazy(() => import("./pages/Calendar"));
 
 const App = () => {
   useEffect(() => {
@@ -37,13 +38,14 @@ const App = () => {
       <VideoModal />
       <SideBar />
       <Header />
-      <main className=" lg:pb-14 md:pb-4 sm:pb-2 xs:pb-1 pb-0">
+      <main className="lg:pb-14 md:pb-4 sm:pb-2 xs:pb-1 pb-0">
         <ScrollToTop>
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/:category/:id" element={<Detail />} />
               <Route path="/:category" element={<Catalog />} />
+              <Route path="/calendar" element={<Calendar />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
 import { API_KEY, TMDB_API_BASE_URL } from "@/utils/config";
 
 export const tmdbApi = createApi({
@@ -39,7 +38,14 @@ export const tmdbApi = createApi({
       query: ({ category, id }: { category: string; id: number }) =>
         `${category}/${id}?append_to_response=videos,credits&api_key=${API_KEY}`,
     }),
+
+    getUpcomingShows: builder.query({
+      query: ({ category, page = 1 }: { category: string; page?: number }) => {
+        const endpoint = category === "movie" ? "upcoming" : "on_the_air";
+        return `${category}/${endpoint}?api_key=${API_KEY}&page=${page}`;
+      },
+    }),
   }),
 });
 
-export const { useGetShowsQuery, useGetShowQuery } = tmdbApi;
+export const { useGetShowsQuery, useGetShowQuery, useGetUpcomingShowsQuery } = tmdbApi;
