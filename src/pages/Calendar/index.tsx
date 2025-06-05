@@ -58,7 +58,7 @@ const Calendar = () => {
                 : "dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800"
             }`}
           >
-            TV Series
+            Series
           </button>
         </div>
 
