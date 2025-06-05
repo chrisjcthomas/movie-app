@@ -6,6 +6,9 @@ import HeroSlide from "./HeroSlide";
 import { useGlobalContext } from "@/context/globalContext";
 import { IMovie } from "@/types";
 
+import "swiper/css";
+import "swiper/css/autoplay";
+
 const Hero = ({ movies }: { movies: IMovie[] }) => {
   const { isModalOpen } = useGlobalContext();
 
