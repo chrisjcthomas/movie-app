@@ -4,7 +4,6 @@ import { AnimatePresence } from "framer-motion";
 import { BsMoonStarsFill, BsBookmark } from "react-icons/bs";
 import { AiOutlineUser, AiOutlineCalendar } from "react-icons/ai";
 import { FiSun } from "react-icons/fi";
-import throttle from "lodash/throttle";
 
 import { ThemeMenu, Logo } from "..";
 import HeaderNavItem from "./HeaderNavItem";
@@ -15,6 +14,7 @@ import { useTheme } from "@/context/themeContext";
 import { maxWidth, textColor } from "@/styles";
 import { THROTTLE_DELAY } from "@/utils/config";
 import { cn } from "@/utils/helper";
+import { throttle } from "@/utils/timerHelpers";
 
 const navLinks = [
   { title: "Home", path: "/" },
