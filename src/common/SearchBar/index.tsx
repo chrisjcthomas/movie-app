@@ -174,8 +174,8 @@ const SearchBar = ({ className }: SearchBarProps) => {
                       {highlightMatch(item.title || item.name)}
                     </span>
                     {getYear(item) && (
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        ({getYear(item)})
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {getYear(item)}
                       </span>
                     )}
                   </div>
