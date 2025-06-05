@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { BsMoonStarsFill, BsBookmark } from "react-icons/bs";
-import { AiOutlineUser, AiOutlineCalendar } from "react-icons/ai";
+import { AiOutlineUser } from "react-icons/ai";
 import { FiSun } from "react-icons/fi";
 import { throttle } from "lodash";
 
@@ -10,9 +10,8 @@ import { ThemeMenu, Logo } from "..";
 import HeaderNavItem from "./HeaderNavItem";
 import Search from "../Search";
 
-import { useGlobalContext } from "@/context/globalContext";
 import { useTheme } from "@/context/themeContext";
-import { maxWidth, textColor } from "@/styles";
+import { maxWidth } from "@/styles";
 import { THROTTLE_DELAY } from "@/utils/config";
 import { cn } from "@/utils/helper";
 
@@ -26,7 +25,6 @@ const navLinks = [
 const Header = () => {
   const { openMenu, theme, showThemeOptions } = useTheme();
   const [isActive, setIsActive] = useState<boolean>(false);
-  const location = useLocation();
 
   useEffect(() => {
     const handleBackgroundChange = () => {
