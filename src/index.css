@@ -49,7 +49,7 @@ body {
 
 .nav-link {
   position: relative;
-  transition: all ease-in 0.3s;
+  transition: all 0.2s ease-in-out;
 }
 
 .nav-link::after {
@@ -60,7 +60,7 @@ body {
   width: 0;
   height: 2px;
   background-color: currentColor;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease-in-out;
   transform: translateX(-50%);
 }
 
@@ -70,13 +70,13 @@ body {
 }
 
 .header-bg--dark {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .header-bg--light {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-
-/* Keep all other existing styles */
