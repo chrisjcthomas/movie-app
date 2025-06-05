@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import { BsMoonStarsFill, BsBookmark } from "react-icons/bs";
 import { AiOutlineUser, AiOutlineCalendar } from "react-icons/ai";
 import { FiSun } from "react-icons/fi";
-import throttle from "lodash.throttle";
+import { throttle } from "lodash";
 
 import { ThemeMenu, Logo } from "..";
 import HeaderNavItem from "./HeaderNavItem";

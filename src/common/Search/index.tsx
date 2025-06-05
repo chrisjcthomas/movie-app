@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-import debounce from "lodash.debounce";
+import { debounce } from "lodash";
 import { cn } from "@/utils/helper";
 import { API_KEY, TMDB_API_BASE_URL } from "@/utils/config";
 import SearchResults from "./SearchResults";
