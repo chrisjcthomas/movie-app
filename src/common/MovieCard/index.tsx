@@ -12,8 +12,13 @@ const MovieCard = ({
   movie: IMovie;
   category: string;
 }) => {
-  const { poster_path, original_title: title, name, id } = movie;
+  const { poster_path, original_title: title, name, id, release_date, first_air_date } = movie;
   const isMobile = useMediaQuery("(max-width: 380px)");
+
+  const year = release_date || first_air_date 
+    ? new Date(release_date || first_air_date).getFullYear() 
+    : null;
+
   return (
     <>
       <Link
@@ -25,22 +30,29 @@ const MovieCard = ({
           width={170}
           src={`https://image.tmdb.org/t/p/original/${poster_path}`}
           alt={movie.original_title}
-          className=" object-cover rounded-lg drop-shadow-md shadow-md group-hover:shadow-none group-hover:drop-shadow-none transition-all duration-300 ease-in-out"
+          className="object-cover rounded-lg drop-shadow-md shadow-md group-hover:shadow-none group-hover:drop-shadow-none transition-all duration-300 ease-in-out"
           effect="zoomIn"
         />
 
-        <div className="absolute top-0 left-0 w-[170px]  h-full group-hover:opacity-100 opacity-0 bg-[rgba(0,0,0,0.6)] transition-all duration-300 rounded-lg flex items-center justify-center">
-          <div className="xs:text-[48px] text-[42px] text-[#ff0000] scale-[0.4] group-hover:scale-100 transition-all duration-300 ">
+        <div className="absolute top-0 left-0 w-[170px] h-full group-hover:opacity-100 opacity-0 bg-[rgba(0,0,0,0.6)] transition-all duration-300 rounded-lg flex items-center justify-center">
+          <div className="xs:text-[48px] text-[42px] text-[#ff0000] scale-[0.4] group-hover:scale-100 transition-all duration-300">
             <FaYoutube />
           </div>
         </div>
       </Link>
 
-      <h4 className="dark:text-gray-300 text-center cursor-default sm:text-base xs:text-[14.75px] text-[14px] font-medium ">
-        {(title?.length > 50 ? title.split(":")[0] : title) || name}
-      </h4>
+      <div className="text-center">
+        <h4 className="dark:text-gray-300 cursor-default sm:text-base xs:text-[14.75px] text-[14px] font-medium">
+          {(title?.length > 50 ? title.split(":")[0] : title) || name}
+        </h4>
+        {year && (
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            ({year})
+          </span>
+        )}
+      </div>
     </>
   );
 };
 
-export default MovieCard
+export default MovieCard;

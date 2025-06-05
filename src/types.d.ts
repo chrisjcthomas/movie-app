@@ -13,6 +13,7 @@ export interface IMovie {
   original_title: string;
   name: string;
   overview: string;
-  backdrop_path: string
+  backdrop_path: string;
+  release_date?: string;
+  first_air_date?: string;
 }
-

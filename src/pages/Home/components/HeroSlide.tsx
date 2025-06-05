@@ -19,7 +19,10 @@ const HeroSlide = ({ movie }: { movie: IMovie }) => {
     original_title: title,
     poster_path: posterPath,
     id,
+    release_date,
   } = movie;
+
+  const year = release_date ? new Date(release_date).getFullYear() : null;
 
   const showTrailer = () => {
     getTrailerId(id);
@@ -44,7 +47,7 @@ const HeroSlide = ({ movie }: { movie: IMovie }) => {
         className="text-gray-300 sm:max-w-[80vw] max-w-[90vw]  md:max-w-[420px] font-nunito flex flex-col sm:gap-5 xs:gap-3 gap-[10px] sm:mb-8"
       >
         <m.h2 variants={fadeDown} className={cn(mainHeading)}>
-          {title}
+          {title} {year && <span className="text-gray-400">({year})</span>}
         </m.h2>
         <m.p variants={fadeDown} className={paragraph}>
           {overview.length > 180 ? `${overview.substring(0, 180)}...` : overview}
