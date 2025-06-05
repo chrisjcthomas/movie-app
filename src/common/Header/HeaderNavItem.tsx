@@ -15,18 +15,14 @@ const HeaderNavItem = ({ link, showBg, isNotFoundPage }: HeaderProps) => {
         to={link.path}
         className={({ isActive }) => {
           return cn(
-            "nav-link relative px-3 py-2 font-medium transition-all duration-200",
+            "nav-link",
             isActive
-              ? cn(
-                  showBg ? textColor : "text-secColor",
-                  "after:bg-current"
-                )
-              : cn(
+              ? ` active ${showBg ? textColor : `text-secColor`}`
+              : ` ${
                   isNotFoundPage || showBg
-                    ? "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                    : "text-gray-300 hover:text-white",
-                  "after:bg-current"
-                )
+                    ? "text-[#444] dark:text-gray-300 dark:hover:text-secColor hover:text-black"
+                    : "text-gray-300 hover:text-secColor"
+                }`
           );
         }}
         end

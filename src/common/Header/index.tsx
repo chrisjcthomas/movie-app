@@ -1,33 +1,37 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { BsMoonStarsFill, BsBookmark } from "react-icons/bs";
-import { AiOutlineUser } from "react-icons/ai";
+import { BsMoonStarsFill } from "react-icons/bs";
+import { AiOutlineMenu } from "react-icons/ai";
 import { FiSun } from "react-icons/fi";
-import { throttle } from "lodash";
+import throttle from "lodash.throttle";
 
 import { ThemeMenu, Logo } from "..";
 import HeaderNavItem from "./HeaderNavItem";
-import Search from "../Search";
 
+import { useGlobalContext } from "@/context/globalContext";
 import { useTheme } from "@/context/themeContext";
-import { maxWidth } from "@/styles";
+import { maxWidth, textColor } from "@/styles";
+import { navLinks } from "@/constants";
 import { THROTTLE_DELAY } from "@/utils/config";
 import { cn } from "@/utils/helper";
 
-const navLinks = [
-  { title: "Home", path: "/" },
-  { title: "Movies", path: "/movie" },
-  { title: "TV Series", path: "/tv" },
-  { title: "Calendar", path: "/calendar" },
-];
-
 const Header = () => {
   const { openMenu, theme, showThemeOptions } = useTheme();
+  const { setShowSidebar } = useGlobalContext();
+
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [isNotFoundPage, setIsNotFoundPage] = useState<boolean>(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleBackgroundChange = () => {
-      if (window.scrollY > 0) {
+      const body = document.body;
+      if (
+        window.scrollY > 0 ||
+        (body.classList.contains("no-scroll") &&
+          parseFloat(body.style.top) * -1 > 0)
+      ) {
         setIsActive(true);
       } else {
         setIsActive(false);
@@ -40,99 +44,89 @@ const Header = () => {
     );
 
     window.addEventListener("scroll", throttledHandleBackgroundChange);
+
     return () => {
       window.removeEventListener("scroll", throttledHandleBackgroundChange);
     };
   }, []);
 
+  useEffect(() => {
+    if (location.pathname.split("/").length > 3) {
+      setIsNotFoundPage(true);
+    } else {
+      setIsNotFoundPage(false);
+    }
+  }, [location.pathname]);
+
   return (
     <header
       className={cn(
-        `fixed top-0 left-0 w-full z-50 transition-all duration-300`,
+        `md:py-[16px] py-[14.5px]  fixed top-0 left-0 w-full z-10 transition-all duration-50`,
         isActive && (theme === "Dark" ? "header-bg--dark" : "header-bg--light")
       )}
     >
-      <div className={cn(maxWidth, "h-16")}>
-        <nav className="flex items-center justify-between h-full">
-          {/* Left Section */}
-          <div className="flex items-center space-x-8">
-            <Logo 
-              logoColor={cn(
-                "transition-colors duration-200",
-                theme === "Dark" ? "text-primary" : "text-black"
-              )} 
-            />
-            <ul className="hidden md:flex items-center space-x-6">
-              {navLinks.map((link) => (
+      <nav
+        className={cn(maxWidth, `flex justify-between flex-row items-center`)}
+      >
+        <Logo
+          logoColor={cn(
+            isNotFoundPage
+              ? "text-black dark:text-primary"
+              : !isNotFoundPage && isActive
+              ? "text-black dark:text-primary"
+              : "text-primary"
+          )}
+        />
+
+        <div className=" hidden md:flex flex-row gap-8 items-center text-gray-600 dark:text-gray-300">
+          <ul className="flex flex-row gap-8 capitalize text-[14.75px] font-medium">
+            {navLinks.map((link: { title: string; path: string }) => {
+              return (
                 <HeaderNavItem
-                  key={link.path}
+                  key={link.title}
                   link={link}
-                  isNotFoundPage={false}
+                  isNotFoundPage={isNotFoundPage}
                   showBg={isActive}
                 />
-              ))}
-            </ul>
-          </div>
+              );
+            })}
+          </ul>
 
-          {/* Center Section - Search */}
-          <div className="hidden md:block flex-1 max-w-md mx-4">
-            <Search />
-          </div>
-
-          {/* Right Section */}
-          <div className="flex items-center space-x-2">
-            {/* Bookmark Button */}
+          <div className="button relative">
             <button
-              type="button"
-              className={cn(
-                "p-2 rounded-full transition-all duration-200",
-                "hover:bg-gray-100 dark:hover:bg-gray-800",
-                "text-gray-700 dark:text-gray-300",
-                "hover:text-gray-900 dark:hover:text-gray-100"
-              )}
-              aria-label="Bookmarks"
-            >
-              <BsBookmark className="w-5 h-5" />
-            </button>
-
-            {/* Profile Button */}
-            <button
-              type="button"
-              className={cn(
-                "p-2 rounded-full transition-all duration-200",
-                "hover:bg-gray-100 dark:hover:bg-gray-800",
-                "text-gray-700 dark:text-gray-300",
-                "hover:text-gray-900 dark:hover:text-gray-100"
-              )}
-              aria-label="Profile"
-            >
-              <AiOutlineUser className="w-5 h-5" />
-            </button>
-
-            {/* Theme Toggle */}
-            <button
+              name="theme-menu"
               type="button"
               onClick={openMenu}
+              id="theme"
               className={cn(
-                "p-2 rounded-full transition-all duration-200",
-                "hover:bg-gray-100 dark:hover:bg-gray-800",
-                "text-gray-700 dark:text-gray-300",
-                "hover:text-gray-900 dark:hover:text-gray-100"
+                `flex items-center justify-center mb-[2px] transition-all duration-100 hover:scale-110`,
+                isNotFoundPage || isActive
+                  ? ` ${textColor} dark:hover:text-secColor hover:text-black `
+                  : ` dark:hover:text-secColor text-gray-300 `
               )}
-              aria-label="Theme toggle"
             >
-              {theme === "Dark" ? (
-                <BsMoonStarsFill className="w-5 h-5" />
-              ) : (
-                <FiSun className="w-5 h-5" />
-              )}
+              {theme === "Dark" ? <BsMoonStarsFill /> : <FiSun />}
             </button>
+            <AnimatePresence>
+              {showThemeOptions && <ThemeMenu />}
+            </AnimatePresence>
           </div>
-        </nav>
-      </div>
-      <AnimatePresence>
-        {showThemeOptions && <ThemeMenu />}
-      </AnimatePresence>
+        </div>
+
+        <button
+          type="button"
+          name="menu"
+          className={cn(
+            `inline-block text-[22.75px] md:hidden  transition-all duration-300`,
+            isNotFoundPage || isActive
+              ? `${textColor} dark:hover:text-secColor hover:text-black `
+              : ` dark:hover:text-secColor text-secColor`
+          )}
+          onClick={() => setShowSidebar(true)}
+        >
+          <AiOutlineMenu />
+        </button>
+      </nav>
     </header>
   );
 };
