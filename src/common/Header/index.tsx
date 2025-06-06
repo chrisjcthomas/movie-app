@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { BsMoonStarsFill, BsBookmark } from "react-icons/bs";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -11,6 +11,7 @@ import HeaderNavItem from "./HeaderNavItem";
 
 import { useGlobalContext } from "@/context/globalContext";
 import { useTheme } from "@/context/themeContext";
+import { useAuth } from "@/context/authContext";
 import { maxWidth, textColor } from "@/styles";
 import { navLinks } from "@/constants";
 import { THROTTLE_DELAY } from "@/utils/config";
@@ -19,6 +20,8 @@ import { cn } from "@/utils/helper";
 const Header = () => {
   const { openMenu, theme, showThemeOptions } = useTheme();
   const { setShowSidebar } = useGlobalContext();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isNotFoundPage, setIsNotFoundPage] = useState<boolean>(false);
@@ -57,6 +60,14 @@ const Header = () => {
       setIsNotFoundPage(false);
     }
   }, [location.pathname]);
+
+  const handleProfileClick = () => {
+    if (user) {
+      navigate('/profile');
+    } else {
+      navigate('/signin');
+    }
+  };
 
   return (
     <header
@@ -107,6 +118,7 @@ const Header = () => {
           </button>
           <button
             type="button"
+            onClick={handleProfileClick}
             className={cn(
               "p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800",
               isNotFoundPage || isActive

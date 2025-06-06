@@ -12,6 +12,8 @@ import {
   Loader,
 } from "@/common";
 
+import { UserProfile } from "@/components";
+
 import "react-loading-skeleton/dist/skeleton.css";
 import "swiper/css";
 import {
@@ -52,6 +54,7 @@ const App = () => {
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/users/:userId" element={<UserProfile />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
